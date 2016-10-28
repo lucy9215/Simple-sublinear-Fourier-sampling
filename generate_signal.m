@@ -14,8 +14,8 @@ function x = generate_signal(sigsize, sparsity, noise)
 % 
 % Anna C. Gilbert
 
-	a = randperm(sigsize);  % permute frequencies
- 	x.inds = a(1:sparsity);   
- 	x.spx = randn(1,sparsity);   % Gaussian random coefficients
- 	x.nu = noise;
+	a = randperm(sigsize);  % permute frequencies  %randpern 随机打乱一个数字序列，这里是将1:sigsize的数随机打乱排序
+ 	x.inds = a(1:sparsity);   % 非零频率的位置
+ 	x.spx = randn(1,sparsity);   % Gaussian random coefficients % m个频率的幅值 1*m的数组
+ 	x.nu = noise;              % 噪声的l2-norm 
     

@@ -11,7 +11,7 @@ m = 2;     % number of total tones
 nu = 0.01; % TOTAL norm of the additive white noise added to sparse signal
 
 % generate the data structure that contains signal information
-x = generate_signal(N,m,nu);   
+x = generate_signal(N,m,nu);    % 设置了一些x的属性，结构体
 
 % reps1 = # repetitions in the main loop of AAFFT (in fourier_sampling.m)
 % reps2 = # repetitions in identification of frequencies
@@ -22,10 +22,10 @@ x = generate_signal(N,m,nu);
 % reps2 = 5
 % reps3 = 5
 
-reps1 = 3; 
-reps2 = 5; 
-reps3 = 11;
-width = 15; 
+reps1 = 3;   %
+reps2 = 5;   % identification
+reps3 = 11;    %estimation
+width = 15;    %滤波器宽度
 
 % ats1 = frequency identification => reps1 * reps2 pairs of random seeds t,s 
 %        (reps2 independent seeds for s and reps1*reps2 seeds for t)
@@ -33,10 +33,18 @@ width = 15;
 % to visualize where the sampling set is:
 % samp1 = all the sampling points for identification
 % samp2 = all the sampling points for estimation
+% ats1, ats2都是t-s对,x*2两维数组 分别为identification和estimation准备的
 
 [ats1, ats2] = generate_tspairs(N,reps1,reps2,reps3);
 
 [xs1, xs2, samp1, samp2] = generate_sample_set(x, N, m, ats1, ats2, width);
+
+% xxx=samp1(:,1,1);
+% yyy=xs1(:,1,1);
+% plot(xxx,yyy);
+
+
+
 
 Lambda = fourier_sampling( xs1, xs2, m, ats1, ats2, reps1, reps2, reps3, N, width );
 
