@@ -39,29 +39,29 @@ width = 15;    %滤波器宽度
 
 [xs1, xs2, samp1, samp2] = generate_sample_set(x, N, m, ats1, ats2, width);
 
-% xxx=samp1(:,1,1);
-% yyy=xs1(:,1,1);
-% plot(xxx,yyy);
+xxx=samp1(1,:,1);%[1,2,3];%
+yyy=abs(xs1(1,:,1));%[1,1,1];%
+plot(xxx,'.');
 
 
 
 
-Lambda = fourier_sampling( xs1, xs2, m, ats1, ats2, reps1, reps2, reps3, N, width );
+Lambda = fourier_sampling( xs1, xs2, m, ats1, ats2, reps1, reps2, reps3, N, width ); % 频率和幅度
 
 % Lambda contains two columns: the first is the frequencies found and the second contains
 % the estimated coefficients for each frequency.
 % Calculate the relative l^2 error of the returned representation.
 
-[~,recov_freq, orig_freq] = intersect(Lambda(:,1), x.inds);
-if ~isempty(recov_freq)
-    err_recov = norm(Lambda(recov_freq, 2).' - x.spx(orig_freq));
+[~,recov_freq, orig_freq] = intersect(Lambda(:,1), x.inds); % 理论和结果得出的频率位置求交集以及交集的坐标，这里~是交集，recov_freq是恢复的频率在Lamda的坐标，orig_freq是在x.inds中的坐标
+if ~isempty(recov_freq)   % 如果恢复的频率中有理论信号频率
+    err_recov = norm(Lambda(recov_freq, 2).' - x.spx(orig_freq)); % 频率的幅值做差求l2范数
 else
-    err_recov = 0;
+    err_recov = 0;   % 如果恢复的频率中没有理论信号频率，这里误差先为0
 end
-[~, recov_freq] = setdiff(Lambda(:,1), x.inds);
-[~, orig_freq] = setdiff(x.inds, Lambda(:,1));
-err_unrecov = norm(Lambda(recov_freq,2)) + norm(x.spx(orig_freq));
-total_err = err_recov + err_unrecov;
+[~, recov_freq] = setdiff(Lambda(:,1), x.inds); % 恢复频率与理论值不同的频率成分（属于Lambda不属于x.inds)
+[~, orig_freq] = setdiff(x.inds, Lambda(:,1));  % 属于x.inds,不属于Lambda
+err_unrecov = norm(Lambda(recov_freq,2)) + norm(x.spx(orig_freq)); % 不同部分的幅值的l2 norm
+total_err = err_recov + err_unrecov;  % 总误差
 fprintf('total rel. error = %f \n', total_err/norm(x.spx));
 
 
